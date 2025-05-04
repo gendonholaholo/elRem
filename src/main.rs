@@ -10,11 +10,11 @@ use std::path::PathBuf;
 
 // Deklarasi modul baru
 mod cli;
-mod utils;
-mod input; // Tambahkan deklarasi modul input
 mod external; // Tambahkan deklarasi modul external
+mod input; // Tambahkan deklarasi modul input
 mod processing; // Tambahkan deklarasi modul processing
-mod ui; // Tambahkan deklarasi modul ui
+mod ui;
+mod utils; // Tambahkan deklarasi modul ui
 
 // --- Konstanta & Fungsi Helper (Sudah dipindah ke src/input/mod.rs) ---
 // const ALLOWED_EXTENSIONS: [&str; 3] = ...;
@@ -45,33 +45,46 @@ fn main() -> Result<()> {
         );
     }
     if !(utils::check_command_exists("python3")? || utils::check_command_exists("python")?) {
-         eprintln!("{}", "Warning: Perintah 'python3' atau 'python' tidak ditemukan. Metode eksternal (MODNet/SAM) tidak akan berfungsi.".yellow());
+        eprintln!("{}", "Warning: Perintah 'python3' atau 'python' tidak ditemukan. Metode eksternal (MODNet/SAM) tidak akan berfungsi.".yellow());
     }
 
     // 2. Validasi Input Path
-     if !input_path_buf.exists() {
-        bail!("Error Input: Path '{}' tidak ditemukan.", input_path_buf.display());
+    if !input_path_buf.exists() {
+        bail!(
+            "Error Input: Path '{}' tidak ditemukan.",
+            input_path_buf.display()
+        );
     }
 
     // 3. Identifikasi Tipe & Kumpulkan File Gambar (Gunakan modul input)
-     let metadata = fs::metadata(&input_path_buf)
+    let metadata = fs::metadata(&input_path_buf)
         .with_context(|| format!("Gagal membaca metadata untuk: {}", input_path_buf.display()))?;
     let input_files: Vec<PathBuf>;
     let is_dir_input = metadata.is_dir();
     let display_path = input_path_buf.display().to_string();
 
     if is_dir_input {
-        println!("{} Input Direktori: Mencari gambar di '{}'...", "INFO:".blue(), display_path);
+        println!(
+            "{} Input Direktori: Mencari gambar di '{}'...",
+            "INFO:".blue(),
+            display_path
+        );
         // Panggil fungsi dari modul input
-        input_files = crate::input::collect_images_from_dir(&input_path_buf)
-            .with_context(|| format!("Gagal mengumpulkan gambar dari direktori: {}", display_path))?;
+        input_files =
+            crate::input::collect_images_from_dir(&input_path_buf).with_context(|| {
+                format!("Gagal mengumpulkan gambar dari direktori: {}", display_path)
+            })?;
         println!("{} Pencarian selesai.", " OK:".green());
     } else if metadata.is_file() {
-        println!("{} Input File: Memvalidasi '{}'...", "INFO:".blue(), display_path);
+        println!(
+            "{} Input File: Memvalidasi '{}'...",
+            "INFO:".blue(),
+            display_path
+        );
         // Panggil fungsi dari modul input
         input_files = crate::input::validate_single_file(&input_path_buf)
             .with_context(|| format!("Gagal memvalidasi file input: {}", display_path))?;
-         println!("{} Validasi selesai.", " OK:".green()); // Tambah konfirmasi validasi
+        println!("{} Validasi selesai.", " OK:".green()); // Tambah konfirmasi validasi
     } else {
         bail!(
             "Error Input: Path '{}' bukan file atau diretori yang valid.",
@@ -80,28 +93,33 @@ fn main() -> Result<()> {
     }
 
     // 4. Cek Hasil Pengumpulan File
-     if input_files.is_empty() {
+    if input_files.is_empty() {
         println!(
             "{}",
-            "Info: Tidak ditemukan file gambar (.png, .jpg, .jpeg) yang valid untuk diproses.".yellow()
+            "Info: Tidak ditemukan file gambar (.png, .jpg, .jpeg) yang valid untuk diproses."
+                .yellow()
         );
         return Ok(());
     }
     println!(
         "{}",
-        format!("{} Ditemukan {} file gambar yang akan diproses."," OK:".green(), input_files.len())
+        format!(
+            "{} Ditemukan {} file gambar yang akan diproses.",
+            " OK:".green(),
+            input_files.len()
+        )
     );
-
 
     // 5. Tampilkan Menu Pilihan Metode (Gunakan modul ui)
     let selection = ui::select_method()?;
 
     // 6. Proses Pilihan Pengguna
-     match selection {
+    match selection {
         Some(index) => {
             // Indeks menu dari dialoguer adalah 0-based.
             // Menu kita: 0..=4 adalah metode, 5 adalah Exit.
-            if index == 5 { // Index 5 (pilihan ke-6) adalah "Exit"
+            if index == 5 {
+                // Index 5 (pilihan ke-6) adalah "Exit"
                 println!("{}", "Keluar.".cyan());
                 return Ok(());
             }
@@ -113,6 +131,5 @@ fn main() -> Result<()> {
         }
     }
 
-
     Ok(())
-} 
+}

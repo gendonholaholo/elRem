@@ -37,8 +37,7 @@ pub fn determine_output_path(
             .with_context(|| {
                 format!(
                     "Internal Error: Gagal mendapatkan path relatif untuk {:?} dari {:?}",
-                    current_file,
-                    original_input_path
+                    current_file, original_input_path
                 )
             })?;
         let base_output_dir = original_input_path.join("elrem_output");
@@ -46,18 +45,15 @@ pub fn determine_output_path(
     } else {
         // Kasus Input File Tunggal:
         let parent_dir = current_file.parent().unwrap_or_else(|| Path::new("."));
-        let stem = current_file
-            .file_stem()
-            .unwrap_or_default();
-        let extension = current_file
-            .extension()
-            .unwrap_or_default();
-        
+        let stem = current_file.file_stem().unwrap_or_default();
+        let extension = current_file.extension().unwrap_or_default();
+
         let new_filename = format!(
-            "{}-nobg.{}", 
-            stem.to_string_lossy(), 
+            "{}-nobg.{}",
+            stem.to_string_lossy(),
             extension.to_string_lossy()
         );
         Ok(parent_dir.join(new_filename))
     }
-} 
+}
+

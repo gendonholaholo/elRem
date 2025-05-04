@@ -39,4 +39,5 @@ pub fn create_progress_bar(total_files: u64) -> Result<ProgressBar> {
 // pub fn get_confirmation(prompt: &str) -> Result<bool> {
 //     // Implementasi konfirmasi jika diperlukan
 //     unimplemented!()
-// } 
+// }
+

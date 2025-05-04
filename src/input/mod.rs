@@ -1,7 +1,7 @@
 use anyhow::{bail, Result};
 // use std::fs;
-use std::path::{Path, PathBuf};
 use colored::*;
+use std::path::{Path, PathBuf};
 use walkdir::WalkDir;
 
 // Konstanta untuk ekstensi yang diizinkan, hanya visible di dalam crate
@@ -24,7 +24,10 @@ pub fn validate_single_file(path: &Path) -> Result<Vec<PathBuf>> {
     if is_valid_image_extension(path) {
         Ok(vec![path.to_path_buf()])
     } else {
-        let ext_str = path.extension().and_then(|s| s.to_str()).unwrap_or("tidak ada");
+        let ext_str = path
+            .extension()
+            .and_then(|s| s.to_str())
+            .unwrap_or("tidak ada");
         bail!(
             "Format file tidak didukung ('{}') atau file tidak berekstensi: {:?}",
             ext_str,
@@ -56,4 +59,5 @@ pub fn collect_images_from_dir(dir_path: &Path) -> Result<Vec<PathBuf>> {
         }
     }
     Ok(image_files)
-} 
+}
+
