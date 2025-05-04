@@ -32,11 +32,12 @@ Sebelum menggunakan ElRem, pastikan Anda sudah menginstall **rembg**.
 
 | Gambar Asli | Hasil Tanpa Background |
 |-------------|------------------------|
-| [link ke foto 1] | [link ke foto 2] |
+| ![image](https://github.com/user-attachments/assets/78217015-9052-44e9-95b3-b396986b3dbe) | ![image-nobg](https://github.com/user-attachments/assets/6aaa812a-3c93-4e4c-badb-5f94a9ef47c5) |
 
 | elRem |
 |----------------------|
-| [gambar lagi] |
+| ![1](https://github.com/user-attachments/assets/c6fde819-a85a-44be-b377-3cfec15ecb14) |
+| ![3](https://github.com/user-attachments/assets/e2adc9a9-4a2f-427b-a2c4-181ec690c02e) |
 
 *   **Untuk input file tunggal:** Hasil gambar tanpa background akan disimpan di **folder yang sama** dengan file asli, dengan nama file yang ditambahkan akhiran `-nobg` (contoh: `gambar_anda-nobg.png`).
 *   **Untuk input folder:** Hasil gambar akan disimpan di **subfolder baru bernama `elrem_output`** di dalam folder input Anda.
